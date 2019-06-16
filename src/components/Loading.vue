@@ -10,18 +10,18 @@
 
 <script>
 export default {
-  name: 'Loading',
+  name: 'Loading'
 }
 </script>
 
 <style>
-.loading-shadow{
+.loading-shadow {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100vh;
-  background-color: rgb(1,1,1,0.1);
+  background-color: rgb(1, 1, 1, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -68,4 +68,3 @@ export default {
   }
 }
 </style>
-

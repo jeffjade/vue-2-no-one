@@ -2,29 +2,30 @@
   <div class="main-page">
     <ul class="picture-list">
       <li v-for="item in imgArray" v-bind:key="item.src">
-        <img :src="item.src" @click="onItemClick(item)" :class="getClassObject(item)" alt="">
+        <img :src="item.src" @click="onItemClick(item)" :class="getClassObject(item)" alt="" />
       </li>
     </ul>
     <div class="btn-area">
       <button @click="onStartCounterwork">开始对抗</button>
     </div>
-    <Loading v-if="isLoading"/>
+    <Loading v-if="isLoading" />
   </div>
 </template>
 
 <script>
 import Loading from './Loading'
+import axios from 'axios'
 
 export default {
   name: 'Mainpage',
-  props: {
-  },
+  props: {},
   components: {
     Loading
   },
   data() {
     return {
       isLoading: false,
+      pythonResultArr: [],
       imgArray: [
         {
           active: true,
@@ -73,18 +74,33 @@ export default {
     getClassObject(item) {
       return item.active ? 'active' : ''
     },
-    execPyScript(command) {
-      // exec python script.
+    execPyScript(path) {
+      this.isLoading = true
+      axios({
+        method: 'get',
+        url: `http://localhost:3000?path=${path}`
+      })
+        .then(response => {
+          console.log(`从 python 脚本得到的结果：`, response.data)
+          this.pythonResultArr = response.data
+        })
+        .catch(error => {
+          console.error('Something Error: ', error)
+        })
+        .finally(() => {
+          this.isLoading = false
+        })
     },
 
     // ------------Click CB Event------------
     onItemClick(item) {
-      this.imgArray.map(item => { item.active = false } )
+      this.imgArray.map(item => {
+        item.active = false
+      })
       item.active = true
     },
     onStartCounterwork() {
-      this.isLoading = true
-      this.execPyScript('python gem.py')
+      this.execPyScript('gem.py')
     }
   }
 }
@@ -104,10 +120,10 @@ export default {
   display: inline-block;
   list-style: none;
 }
-.picture-list li img{
+.picture-list li img {
   width: 100%;
 }
-.active{
+.active {
   border-bottom: 3px solid #d71345;
   border-top: 3px solid #d71345;
 }
