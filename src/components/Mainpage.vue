@@ -33,6 +33,7 @@ export default {
     return {
       isLoading: false,
       pythonResultArr: [],
+      currentImgName: 'airplane00.png',
       imgArray: [
         {
           name: 'airplane00.png',
@@ -91,15 +92,17 @@ export default {
     getClassObject(item) {
       return item.active ? 'active' : ''
     },
-    execPyScript(path) {
+    execPyScript(scriptName, imageName) {
       this.isLoading = true
-      axios(`http://localhost:3000`, {
+      axios(`http://localhost:3000/api`, {
         params: {
-          path: path
+          scriptName,
+          imageName
         }
       })
         .then(response => {
           console.log(`从 python 脚本得到的结果：`, response.data)
+          this.pythonResultArr = []
           const tempArr = response.data.split('#')
            tempArr.map(name => {
             this.imgArray.forEach(item => {
@@ -123,9 +126,10 @@ export default {
         item.active = false
       })
       item.active = true
+      this.currentImgName = item.name
     },
     onStartCounterwork() {
-      this.execPyScript('gem.py')
+      this.execPyScript('gem.py', this.currentImgName)
     }
   }
 }

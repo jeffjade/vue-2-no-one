@@ -14,12 +14,13 @@ app.use(
 )
 
 app.use(async ctx => {
-  console.log(`ctx.query: `, ctx.query)
-  const query = ctx.query
-  const path = query.path
-  const result = await runpath(path)
-  console.log(`Server result: `, typeof result[0])
-  ctx.body = result[0]
+  if (ctx.url.indexOf('/api') > -1) {
+    console.log(`ctx.query: `, ctx.query)
+    const query = ctx.query
+    const result = await runpath(query.scriptName, query.imageName)
+    console.log(`Server result: `, result)
+    ctx.body = result[0]
+  }
 })
 
 app.listen(3000)

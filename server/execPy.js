@@ -44,10 +44,14 @@ const path = require('path')
 //   )
 // }
 
-const runpath = pyname => {
-  const pypath = path.join(__dirname, 'python', pyname)
+const runpath = (scriptName, imageName) => {
+  const pypath = path.join(__dirname, 'python', scriptName)
   return new Promise((resolve, reject) => {
-    PythonShell.run(pypath, null, (err, results) => {
+    const options = {
+      mode: 'text',
+      args: [imageName]
+    }
+    PythonShell.run(pypath, options, (err, results) => {
       if (err) {
         reject([])
         throw err
