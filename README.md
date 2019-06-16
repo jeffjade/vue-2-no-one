@@ -18,4 +18,6 @@ npm i
 
 ```bash
 npm start
+# open server
+npm server
 ```
