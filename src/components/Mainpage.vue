@@ -126,6 +126,7 @@ export default {
         item.active = false
       })
       item.active = true
+      this.pythonResultArr = []
       this.currentImgName = item.name
     },
     onStartCounterwork() {
