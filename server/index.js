@@ -18,7 +18,8 @@ app.use(async ctx => {
   const query = ctx.query
   const path = query.path
   const result = await runpath(path)
-  return (ctx.body = result[0])
+  console.log(`Server result: `, typeof result[0])
+  ctx.body = result[0]
 })
 
 app.listen(3000)

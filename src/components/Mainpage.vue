@@ -1,7 +1,7 @@
 <template>
   <div class="main-page">
     <ul class="picture-list">
-      <li v-for="item in imgArray" v-bind:key="item.src">
+      <li v-for="item in imgArray" v-bind:key="item.name">
         <img :src="item.src" @click="onItemClick(item)" :class="getClassObject(item)" alt="" />
       </li>
     </ul>
@@ -9,12 +9,19 @@
       <button @click="onStartCounterwork">开始对抗</button>
     </div>
     <Loading v-if="isLoading" />
+    <ul class="picture-list">
+      <li v-for="(item, index) in pythonResultArr" v-bind:key="index">
+        <img :src="item.src"  alt="" />
+      </li>
+    </ul>
   </div>
 </template>
 
 <script>
 import Loading from './Loading'
 import axios from 'axios'
+import { request } from 'http';
+import { decode } from 'querystring';
 
 export default {
   name: 'Mainpage',
@@ -28,42 +35,52 @@ export default {
       pythonResultArr: [],
       imgArray: [
         {
+          name: 'airplane00.png',
           active: true,
           src: require('./../assets/images/airplane00.png')
         },
         {
+          name: 'beach00.png',
           active: false,
           src: require('./../assets/images/beach00.png')
         },
         {
+          name: 'buildings00.png',
           active: false,
           src: require('./../assets/images/buildings00.png')
         },
         {
+          name: 'forest22.png',
           active: false,
           src: require('./../assets/images/forest22.png')
         },
         {
+          name: 'freeway00.png',
           active: false,
           src: require('./../assets/images/freeway00.png')
         },
         {
+          name: 'harbor00.png',
           active: false,
           src: require('./../assets/images/harbor00.png')
         },
         {
+          name: 'overpass00.png',
           active: false,
           src: require('./../assets/images/overpass00.png')
         },
         {
+          name: 'parkinglot00.png',
           active: false,
           src: require('./../assets/images/parkinglot00.png')
         },
         {
+          name: 'river17.png',
           active: false,
           src: require('./../assets/images/river17.png')
         },
         {
+          name: 'storagetanks00.png',
           active: false,
           src: require('./../assets/images/storagetanks00.png')
         }
@@ -76,13 +93,21 @@ export default {
     },
     execPyScript(path) {
       this.isLoading = true
-      axios({
-        method: 'get',
-        url: `http://localhost:3000?path=${path}`
+      axios(`http://localhost:3000`, {
+        params: {
+          path: path
+        }
       })
         .then(response => {
           console.log(`从 python 脚本得到的结果：`, response.data)
-          this.pythonResultArr = response.data
+          const tempArr = response.data.split('#')
+           tempArr.map(name => {
+            this.imgArray.forEach(item => {
+              if (name === item.name) {
+                this.pythonResultArr.push(item)
+              }
+            })
+          })
         })
         .catch(error => {
           console.error('Something Error: ', error)
