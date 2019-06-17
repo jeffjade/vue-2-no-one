@@ -16,11 +16,11 @@ export default {
 
 <style>
 .loading-shadow {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   background-color: rgb(1, 1, 1, 0.1);
   display: flex;
   align-items: center;
