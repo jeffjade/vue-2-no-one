@@ -11,7 +11,7 @@
     <Loading v-if="isLoading" />
     <ul class="picture-list">
       <li v-for="(item, index) in pythonResultArr" v-bind:key="index">
-        <img :src="item.src"  alt="" />
+        <img :src="item"  alt="" />
       </li>
     </ul>
   </div>
@@ -94,7 +94,7 @@ export default {
     },
     execPyScript(scriptName, imageName) {
       this.isLoading = true
-      axios(`http://localhost:3000/api`, {
+      axios(`http://localhost:3000/api/py`, {
         params: {
           scriptName,
           imageName
@@ -104,12 +104,9 @@ export default {
           console.log(`从 python 脚本得到的结果：`, response.data)
           this.pythonResultArr = []
           const tempArr = response.data.split('#')
-           tempArr.map(name => {
-            this.imgArray.forEach(item => {
-              if (name === item.name) {
-                this.pythonResultArr.push(item)
-              }
-            })
+          tempArr.map(item => {
+            const imgName = `http://localhost:3000/api/images/${item}`
+            this.pythonResultArr.push(imgName)
           })
         })
         .catch(error => {
